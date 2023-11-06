@@ -171,9 +171,9 @@ const months = csvParsed.data.reduce(
                 } else {
                   resultElement.classList.add("text-orange-500");
                   infoElement.classList.add(...noticeClasses);
-                  infoElement.innerHTML = `Deine letzte Erhöhung ist noch keine 12 Monate her. Wäre es der Fall könnte dein Vermieter diesen Monat, die Miete um <span class="whitespace-nowrap font-bold text-orange-600">${formatNumber(
+                  infoElement.innerHTML = `Deine letzte Erhöhung ist noch keine 12 Monate her, deshalb darf dein Vermieter die Miete nicht wegen der Indexklausel erhöhen. Der Index ist seitdem um <span class="whitespace-nowrap font-bold text-orange-600">${formatNumber(
                     indexDifference,
-                  )} %</span> erhöhen.`;
+                  )} %</span> gestiegen.`;
                 }
               } else if (monthsAgo >= 12) {
                 resultElement.classList.add("text-emerald-500");
