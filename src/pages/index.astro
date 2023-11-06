@@ -27,6 +27,8 @@ const csvParsed = Papa.parse(csvString || "");
 
 const labels = csvParsed.data.map((i) => `${i[1]} ${i[0]}`);
 const values = csvParsed.data.map((i) => i[2]);
+const changeToPreviousMonth = csvParsed.data.at(-1)?.[4];
+const didIncrease = parseFloat(changeToPreviousMonth.replace(",", ".")) > 0;
 ---
 
 <Layout title="Welcome to Astro.">
@@ -51,8 +53,17 @@ const values = csvParsed.data.map((i) => i[2]);
         </div>
       </div>
       <div>
-        <h2 class="mb-1 text-6xl font-extrabold tracking-tighter">
-          {values.at(-1)}
+        <h2
+          class="mb-1 inline-flex items-baseline gap-2 font-extrabold tracking-tighter"
+        >
+          <span class="text-6xl">{values.at(-1)}</span>
+          <span
+            class="text-3xl"
+            class:list={[
+              { "text-red-500": didIncrease },
+              { "text-emerald-500": !didIncrease },
+            ]}>{changeToPreviousMonth}</span
+          >
         </h2>
         <p class="mb-4 text-xl text-gray-500">{labels.at(-1)}</p>
         <p class="max-w-xl">
