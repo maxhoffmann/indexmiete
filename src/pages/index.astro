@@ -27,8 +27,15 @@ const csvParsed = Papa.parse(csvString || "");
 
 const labels = csvParsed.data.map((i) => `${i[1]} ${i[0]}`);
 const values = csvParsed.data.map((i) => i[2]);
-const changeToPreviousMonth = csvParsed.data.at(-1)?.[4];
-const didIncrease = parseFloat(changeToPreviousMonth.replace(",", ".")) > 0;
+const months = csvParsed.data.reduce(
+  (result, current) => (
+    (result[`${current[0]} ${current[1]}`] = parseFloat(
+      current[2].replace(",", "."),
+    )),
+    result
+  ),
+  {},
+);
 ---
 
 <Layout title="Welcome to Astro.">
@@ -36,7 +43,7 @@ const didIncrease = parseFloat(changeToPreviousMonth.replace(",", ".")) > 0;
     <div
       class="grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-x-10 max-lg:gap-y-8"
     >
-      <div class="mb-2 lg:col-span-2">
+      <div class="mb-2 lg:col-span-2 max-lg:order-1">
         <h1 class="text-2xl font-bold">Verbraucherpreisindex</h1>
         <p class="text-sm text-gray-500">
           {rawLines.at(5).split(";").slice(1, 4).join(" ")}
@@ -55,19 +62,122 @@ const didIncrease = parseFloat(changeToPreviousMonth.replace(",", ".")) > 0;
         </div>
       </div>
       <div>
-        <h2
-          class="mb-1 inline-flex items-baseline gap-2 font-extrabold tracking-tighter"
-        >
-          <span class="text-6xl">{values.at(-1)}</span>
-          <span
-            class="text-3xl"
-            class:list={[
-              { "text-red-500": didIncrease },
-              { "text-emerald-500": !didIncrease },
-            ]}>{changeToPreviousMonth}</span
-          >
-        </h2>
-        <p class="mb-4 text-xl text-gray-500">{labels.at(-1)}</p>
+        <div class="space-y-1 mb-4">
+          <h2 class="text-6xl font-extrabold tracking-tighter">
+            {values.at(-1)}
+          </h2>
+          <p class="text-xl text-gray-500">{labels.at(-1)}</p>
+        </div>
+
+        <div class="mb-6 space-y-2">
+          <label class="block font-semibold text-gray-700" for="last-increase">
+            Wann war deine letzte Mieterhöhung?
+          </label>
+          <div class="flex gap-4 items-center">
+            <select
+              id="last-increase"
+              class="border-2 border-gray-300 text-gray-950 rounded px-4 py-2 appearance-none cursor-pointer hover:bg-blue-50 focus:bg-blue-50 transition-colors"
+              oninput="getResult(this.value)"
+              data-months={JSON.stringify(months)}
+            >
+              {
+                Object.keys(months)
+                  .slice(0, -1)
+                  .reverse()
+                  .map((month) => <option value={month}>{month}</option>)
+              }
+            </select>
+            <div
+              id="difference"
+              class="text-3xl font-extrabold tracking-tight leading-none"
+            >
+            </div>
+          </div>
+          <div id="info" class="hidden border p-4 rounded-lg"></div>
+
+          <script is:inline>
+            const resultElement = document.querySelector("#difference");
+            const selectElement = document.querySelector("#last-increase");
+            const infoElement = document.querySelector("#info");
+            const months = JSON.parse(selectElement.dataset.months);
+            const monthList = Object.keys(months);
+            const currentMonth = monthList.at(-1);
+
+            getResult(monthList.at(-2), true);
+
+            function getResult(selectedMonth, notIniatedByUser) {
+              const warningClasses = [
+                "bg-red-50",
+                "text-red-950",
+                "border-red-200",
+              ];
+              const noticeClasses = [
+                "bg-yellow-50",
+                "text-orange-950",
+                "border-yellow-200",
+              ];
+              const positiveClasses = [
+                "bg-emerald-50",
+                "text-emerald-950",
+                "border-emerald-200",
+              ];
+              const indexDifference =
+                months[currentMonth] - months[selectedMonth];
+              const didIndexIncrease = indexDifference > 0;
+              const monthsAgo =
+                monthList.indexOf(currentMonth) -
+                monthList.indexOf(selectedMonth);
+
+              resultElement.innerHTML = `${
+                indexDifference === 0 ? "" : didIndexIncrease ? "+" : "-"
+              }${formatNumber(indexDifference)}`;
+
+              resultElement.classList.remove(
+                "text-emerald-500",
+                "text-orange-500",
+                "text-red-500",
+              );
+              infoElement.classList.remove(
+                ...warningClasses,
+                ...noticeClasses,
+                ...positiveClasses,
+                !notIniatedByUser && "hidden",
+              );
+
+              if (didIndexIncrease) {
+                if (monthsAgo >= 12) {
+                  resultElement.classList.add("text-red-500");
+                  infoElement.classList.add(...warningClasses);
+                  infoElement.innerHTML = `Dein Vermieter könnte deine Miete diesen Monat um <span class="whitespace-nowrap font-bold text-red-500">${formatNumber(
+                    indexDifference,
+                  )} %</span> erhöhen, da sie über 12 Monate zurückliegt.`;
+                } else {
+                  resultElement.classList.add("text-orange-500");
+                  infoElement.classList.add(...noticeClasses);
+                  infoElement.innerHTML = `Deine letzte Erhöhung ist noch keine 12 Monate her. Wäre es der Fall könnte dein Vermieter diesen Monat, die Miete um <span class="whitespace-nowrap font-bold text-orange-600">${formatNumber(
+                    indexDifference,
+                  )} %</span> erhöhen.`;
+                }
+              } else if (monthsAgo >= 12) {
+                resultElement.classList.add("text-emerald-500");
+                infoElement.classList.add(...positiveClasses);
+                infoElement.innerHTML = `Du könntest diesen Monat deine Miete um <span class="whitespace-nowrap font-bold text-emerald-700">${formatNumber(
+                  indexDifference,
+                )} %</span> senken.`;
+              }
+            }
+
+            function formatNumber(number, options) {
+              return new Intl.NumberFormat("de-DE", {
+                maximumFractionDigits: 2,
+                ...options,
+              })
+                .format(number)
+                .replace(/^([+-])(\d)/, "$1 $2");
+            }
+          </script>
+        </div>
+
         <div class="space-y-4 mb-10 max-w-xl">
           <p>
             Indexmieten können mit dem Verbraucherpreisindex steigen (oder
@@ -77,11 +187,11 @@ const didIncrease = parseFloat(changeToPreviousMonth.replace(",", ".")) > 0;
           <p>
             Die Daten für diese Seite werden automatisiert jeden Tag von der
             offiziellen Schnittstelle des Statistischen Bundesamts geladen, auch
-            wenn der Index sich in der Regel nur monatlich verändert. Der
-            Zeitpunkt der letzten Datenabfrage wird unter dem Diagramm
-            angezeigt.
+            wenn der Index sich in der Regel nur monatlich ändert. Der Zeitpunkt
+            der letzten Datenabfrage wird unter dem Diagramm angezeigt.
           </p>
         </div>
+
         <div class="text-sm">
           <p>entwickelt von <strong>Maximilian Hoffmann</strong></p>
           <p class="text-gray-500">
@@ -110,6 +220,7 @@ const didIncrease = parseFloat(changeToPreviousMonth.replace(",", ".")) > 0;
           </ul>
         </div>
       </div>
+
       {
         import.meta.env.DEV && (
           <details class="pt-10 lg:col-span-2 max-lg:order-2">
