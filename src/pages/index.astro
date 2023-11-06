@@ -1,0 +1,74 @@
+---
+import staticJson from "../static.json";
+
+import Layout from "../layouts/Layout.astro";
+import Chart from "../components/Chart.astro";
+import Papa from "papaparse";
+
+const dataset = "61111-0002";
+const endYear = new Date().getFullYear();
+const startYear = endYear - 3;
+const compress = true;
+const transpose = false;
+
+const user = import.meta.env.API_USER;
+const pw = import.meta.env.API_PASSWORD;
+
+const json = import.meta.env.DEV
+  ? staticJson
+  : await (
+      await fetch(
+        `https://www-genesis.destatis.de/genesisWS/rest/2020/data/table?username=${user}&password=${pw}&name=${dataset}&area=all&compress=${compress}&transpose=${transpose}&startyear=${startYear}&endyear=${endYear}&language=de`,
+      )
+    ).json();
+const rawLines = json?.Object?.Content?.split("\n");
+const csvString = rawLines?.slice(6, -4)?.join("\n");
+const csvParsed = Papa.parse(csvString || "");
+
+const labels = csvParsed.data.map((i) => `${i[1]} ${i[0]}`);
+const values = csvParsed.data.map((i) => i[2]);
+---
+
+<Layout title="Welcome to Astro.">
+  <main class="p-10">
+    <div class="grid lg:grid-cols-2 gap-x-10 max-lg:gap-y-8">
+      <div class="mb-2 lg:col-span-2">
+        <h1 class="text-2xl font-bold">Verbraucherpreisindex</h1>
+        <p class="text-sm text-gray-500">
+          {rawLines.at(5).split(";").slice(1, 4).join(" ")}
+        </p>
+      </div>
+      <div class="max-lg:order-1">
+        <Chart
+          labels={csvParsed.data.map((i) => `${i[1]} ${i[0]}`)}
+          values={csvParsed.data.map((i) => i[2])}
+        />
+        <div class="mt-4 lg:mt-10 space-y-2 text-sm text-gray-400">
+          <p>{rawLines.at(-3)}</p>
+          <p>{rawLines.at(-2)}</p>
+        </div>
+      </div>
+      <div>
+        <h2 class="mb-1 text-6xl font-extrabold tracking-tighter">
+          {values.at(-1)}
+        </h2>
+        <p class="text-xl text-gray-500">{labels.at(-1)}</p>
+      </div>
+      <details class="pt-10 lg:col-span-2 max-lg:order-2">
+        <summary class="text-sm font-mono">debug</summary>
+        <div class="grid grid-cols-2 gap-10 pt-4">
+          <div class="space-y-2">
+            <h2 class="font-mono text-sm">CSV</h2>
+            <pre
+              class="bg-gray-900 text-white rounded-lg p-4 text-sm h-48 overflow-y-auto"><code>{csvString}</code></pre>
+          </div>
+          <div class="space-y-2">
+            <h2 class="font-mono text-sm">JSON</h2>
+            <pre
+              class="bg-gray-900 text-white rounded-lg p-4 text-sm h-48 overflow-y-auto"><code>{JSON.stringify(csvParsed.data, null, 2)}</code></pre>
+          </div>
+        </div>
+      </details>
+    </div>
+  </main>
+</Layout>

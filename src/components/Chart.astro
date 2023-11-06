@@ -1,0 +1,48 @@
+---
+const { values, labels } = Astro.props;
+---
+
+<line-chart
+  data-values={JSON.stringify(values)}
+  data-labels={JSON.stringify(labels)}
+>
+  <div class="relative w-full">
+    <canvas id="chart"></canvas>
+  </div>
+</line-chart>
+
+<script>
+  import Chart from "chart.js/auto";
+
+  class LineChart extends HTMLElement {
+    constructor() {
+      super();
+
+      const { values, labels } = this.dataset;
+
+      new Chart(this.querySelector("#chart"), {
+        type: "line",
+        data: {
+          labels: JSON.parse(labels),
+          datasets: [
+            {
+              label: "Verbraucherpreisindex",
+              display: false,
+              data: JSON.parse(values).map((i) =>
+                parseFloat(i.replace(",", ".")),
+              ),
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            legend: false,
+          },
+        },
+      });
+    }
+  }
+
+  customElements.define("line-chart", LineChart);
+</script>
