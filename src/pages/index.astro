@@ -40,16 +40,19 @@ const months = csvParsed.data.reduce(
 
 <Layout title="Welcome to Astro.">
   <main class="p-4 sm:p-10">
+    <h1 class="text-6xl font-extrabold tracking-tight max-lg:mb-4">
+      Indexmiete
+    </h1>
     <div
-      class="grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-x-10 max-lg:gap-y-8"
+      class="grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-x-10 max-lg:gap-y-4"
     >
-      <div class="mb-2 lg:col-span-2 max-lg:order-1">
+      <div class="mb-2 lg:col-span-2 max-lg:order-2">
         <h1 class="text-2xl font-bold">Verbraucherpreisindex</h1>
         <p class="text-sm text-gray-500">
           {rawLines.at(5).split(";").slice(1, 4).join(" ")}
         </p>
       </div>
-      <div class="max-lg:order-1">
+      <div class="max-lg:order-2">
         <Chart
           labels={csvParsed.data.map((i) => `${i[1]} ${i[0]}`)}
           values={csvParsed.data.map((i) => i[2])}
@@ -61,15 +64,29 @@ const months = csvParsed.data.reduce(
           </p>
         </div>
       </div>
-      <div>
+      <div class="max-lg:contents">
         <div class="space-y-1 mb-4">
-          <h2 class="text-6xl font-extrabold tracking-tighter">
+          <h2 class="text-6xl font-extrabold tracking-tighter max-lg:text-5xl">
             {values.at(-1)}
           </h2>
           <p class="text-xl text-gray-500">{labels.at(-1)}</p>
         </div>
 
-        <div class="mb-6 space-y-2">
+        <div class="space-y-4 mb-6 max-w-xl">
+          <p>
+            Indexmieten können mit dem Verbraucherpreisindex steigen (oder
+            sinken). Diese Webseite hilft herauszufinden, wann sich deine Miete
+            verändern könnte.
+          </p>
+          <p>
+            Die Daten für diese Seite werden automatisiert jeden Tag von der
+            offiziellen Schnittstelle des Statistischen Bundesamts geladen, auch
+            wenn der Index sich in der Regel nur monatlich ändert. Der Zeitpunkt
+            der letzten Datenabfrage wird unter dem Diagramm angezeigt.
+          </p>
+        </div>
+
+        <div class="mb-10 space-y-2 max-lg:order-1">
           <label class="block font-semibold text-gray-700" for="last-increase">
             Wann war deine letzte Mieterhöhung?
           </label>
@@ -178,21 +195,7 @@ const months = csvParsed.data.reduce(
           </script>
         </div>
 
-        <div class="space-y-4 mb-10 max-w-xl">
-          <p>
-            Indexmieten können mit dem Verbraucherpreisindex steigen (oder
-            sinken). Diese Webseite hilft herauszufinden, wann sich deine Miete
-            verändern könnte.
-          </p>
-          <p>
-            Die Daten für diese Seite werden automatisiert jeden Tag von der
-            offiziellen Schnittstelle des Statistischen Bundesamts geladen, auch
-            wenn der Index sich in der Regel nur monatlich ändert. Der Zeitpunkt
-            der letzten Datenabfrage wird unter dem Diagramm angezeigt.
-          </p>
-        </div>
-
-        <div class="text-sm">
+        <div class="text-sm max-lg:order-3">
           <p>entwickelt von <strong>Maximilian Hoffmann</strong></p>
           <p class="text-gray-500">
             Software-Entwickler und Mieter eines Indexmietvertrags
@@ -223,7 +226,7 @@ const months = csvParsed.data.reduce(
 
       {
         import.meta.env.DEV && (
-          <details class="pt-10 lg:col-span-2 max-lg:order-2">
+          <details class="pt-10 lg:col-span-2 max-lg:order-10">
             <summary class="text-sm font-mono">debug</summary>
             <div class="grid grid-cols-2 gap-10 pt-4">
               <div class="space-y-2">
