@@ -66,11 +66,36 @@ const didIncrease = parseFloat(changeToPreviousMonth.replace(",", ".")) > 0;
           >
         </h2>
         <p class="mb-4 text-xl text-gray-500">{labels.at(-1)}</p>
-        <p class="max-w-xl">
+        <p class="mb-10 max-w-xl">
           Indexmieten können mit dem Verbraucherpreisindex steigen (oder
           sinken). Diese Webseite hilft dabei einfach herauszufinden, wann sich
           deine Miete verändern kann.
         </p>
+        <div class="text-sm">
+          <p>entwickelt von <strong>Maximilian Hoffmann</strong></p>
+          <p>Software-Entwickler und Mieter eines Indexmietvertrags</p>
+          <ul class="mt-2 flex gap-4 font-medium">
+            <li>
+              <a
+                class="underline hover:no-underline text-slate-600"
+                href="https://max.hn">Webseite</a
+              >
+            </li>
+            <li>
+              <a
+                class="underline hover:no-underline text-indigo-600"
+                href="https://berlin.social/@max">Mastodon</a
+              >
+            </li>
+            <li>
+              <a
+                class="underline hover:no-underline text-sky-700"
+                href="https://www.linkedin.com/in/maximilianhoffmann/"
+                >Linkedin</a
+              >
+            </li>
+          </ul>
+        </div>
       </div>
       {
         import.meta.env.DEV && (
