@@ -31,7 +31,9 @@ const values = csvParsed.data.map((i) => i[2]);
 
 <Layout title="Welcome to Astro.">
   <main class="p-10">
-    <div class="grid lg:grid-cols-2 gap-x-10 max-lg:gap-y-8">
+    <div
+      class="grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-x-10 max-lg:gap-y-8"
+    >
       <div class="mb-2 lg:col-span-2">
         <h1 class="text-2xl font-bold">Verbraucherpreisindex</h1>
         <p class="text-sm text-gray-500">
