@@ -32,7 +32,7 @@ const didIncrease = parseFloat(changeToPreviousMonth.replace(",", ".")) > 0;
 ---
 
 <Layout title="Welcome to Astro.">
-  <main class="p-10">
+  <main class="p-4 sm:p-10">
     <div
       class="grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-x-10 max-lg:gap-y-8"
     >
@@ -49,7 +49,9 @@ const didIncrease = parseFloat(changeToPreviousMonth.replace(",", ".")) > 0;
         />
         <div class="mt-4 lg:mt-10 space-y-2 text-sm text-gray-400">
           <p>{rawLines.at(-3)}</p>
-          <p>{rawLines.at(-2)}</p>
+          <p>
+            {rawLines.at(-2)}
+          </p>
         </div>
       </div>
       <div>
@@ -66,18 +68,29 @@ const didIncrease = parseFloat(changeToPreviousMonth.replace(",", ".")) > 0;
           >
         </h2>
         <p class="mb-4 text-xl text-gray-500">{labels.at(-1)}</p>
-        <p class="mb-10 max-w-xl">
-          Indexmieten können mit dem Verbraucherpreisindex steigen (oder
-          sinken). Diese Webseite hilft dabei einfach herauszufinden, wann sich
-          deine Miete verändern kann.
-        </p>
+        <div class="space-y-4 mb-10 max-w-xl">
+          <p>
+            Indexmieten können mit dem Verbraucherpreisindex steigen (oder
+            sinken). Diese Webseite hilft herauszufinden, wann sich deine Miete
+            verändern könnte.
+          </p>
+          <p>
+            Die Daten für diese Seite werden automatisiert jeden Tag von der
+            offiziellen Schnittstelle des Statistischen Bundesamts geladen, auch
+            wenn der Index sich in der Regel nur monatlich verändert. Der
+            Zeitpunkt der letzten Datenabfrage wird unter dem Diagramm
+            angezeigt.
+          </p>
+        </div>
         <div class="text-sm">
           <p>entwickelt von <strong>Maximilian Hoffmann</strong></p>
-          <p>Software-Entwickler und Mieter eines Indexmietvertrags</p>
+          <p class="text-gray-500">
+            Software-Entwickler und Mieter eines Indexmietvertrags
+          </p>
           <ul class="mt-2 flex gap-4 font-medium">
             <li>
               <a
-                class="underline hover:no-underline text-slate-600"
+                class="underline hover:no-underline text-gray-600"
                 href="https://max.hn">Webseite</a
               >
             </li>
