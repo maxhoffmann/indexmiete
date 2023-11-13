@@ -120,14 +120,14 @@ const months = csvParsed.data.reduce(
             ];
             const indexDifference =
               months[currentMonth] - months[selectedMonth];
-            const didIndexIncrease = indexDifference > 0;
+            const didIndexIncrease = indexDifference >= 0;
             const monthsAgo =
               monthList.indexOf(currentMonth) -
               monthList.indexOf(selectedMonth);
 
             resultElement.innerHTML = `${
               indexDifference === 0 ? "" : didIndexIncrease ? "+" : "-"
-            }${formatNumber(indexDifference)}`;
+            }${formatNumber(indexDifference)}&nbsp;%`;
 
             resultElement.classList.remove(
               "text-emerald-500",
