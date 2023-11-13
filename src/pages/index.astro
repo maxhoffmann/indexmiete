@@ -21,6 +21,7 @@ const json = import.meta.env.DEV
         `https://www-genesis.destatis.de/genesisWS/rest/2020/data/table?username=${user}&password=${pw}&name=${dataset}&area=all&compress=${compress}&transpose=${transpose}&startyear=${startYear}&endyear=${endYear}&language=de`,
       )
     ).json();
+
 const rawLines = json?.Object?.Content?.split("\n");
 const csvString = rawLines?.slice(6, -4)?.join("\n");
 const csvParsed = Papa.parse(csvString || "");
@@ -210,12 +211,6 @@ const months = csvParsed.data.reduce(
         <ul class="mt-2 flex gap-4 font-medium">
           <li>
             <a
-              class="underline hover:no-underline text-gray-600"
-              href="https://max.hn">Webseite</a
-            >
-          </li>
-          <li>
-            <a
               class="underline hover:no-underline text-indigo-600"
               href="https://berlin.social/@max">Mastodon</a
             >
@@ -224,6 +219,12 @@ const months = csvParsed.data.reduce(
             <a
               class="underline hover:no-underline text-sky-700"
               href="https://www.linkedin.com/in/maximilianhoffmann/">Linkedin</a
+            >
+          </li>
+          <li>
+            <a
+              class="underline hover:no-underline text-gray-600"
+              href="https://max.hn">Webseite</a
             >
           </li>
         </ul>
