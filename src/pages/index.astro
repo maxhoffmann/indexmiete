@@ -126,7 +126,7 @@ const months = csvParsed.data.reduce(
               monthList.indexOf(selectedMonth);
 
             resultElement.innerHTML = `${
-              indexDifference === 0 ? "" : didIndexIncrease ? "+" : "-"
+              indexDifference === 0 ? "" : didIndexIncrease ? "+" : ""
             }${formatNumber(indexDifference)}&nbsp;%`;
 
             resultElement.classList.remove(
@@ -161,6 +161,12 @@ const months = csvParsed.data.reduce(
               infoElement.innerHTML = `Du könntest diesen Monat deine Miete um <span class="whitespace-nowrap font-bold text-emerald-700">${formatNumber(
                 indexDifference,
               )} %</span> senken.`;
+            } else {
+              resultElement.classList.add("text-orange-500");
+              infoElement.classList.add(...noticeClasses);
+              infoElement.innerHTML = `Deine letzte Mietanpassung ist noch keine 12 Monate her, deshalb kannst du deine Miete wahrscheinlich noch nicht mit der Indexklausel reduzieren. Der Index ist seitdem um <span class="whitespace-nowrap font-bold text-orange-600">${formatNumber(
+                indexDifference,
+              )} %</span> gesunken.`;
             }
           }
 
