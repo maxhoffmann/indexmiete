@@ -219,27 +219,53 @@ const timestamp = rawLines.filter((line) => line.includes("Stand:"))[0];
       <div
         class="mt-10 text-sm lg:col-start-3 lg:row-start-5 lg:justify-self-end lg:text-right"
       >
-        <p>entwickelt von <strong>Max Hoffmann</strong></p>
-        <ul class="mt-2 flex gap-4 font-medium">
-          <li>
+        <p>
+          entwickelt von <a
+            href="https://max.hn"
+            class="font-bold hover:underline">Max Hoffmann</a
+          >
+          <span class="inline-flex pl-1 gap-2 items-center -translate-y-0.5">
             <a
-              class="underline hover:no-underline text-indigo-600"
-              href="https://berlin.social/@max">Mastodon</a
+              class="hover:underline text-indigo-600"
+              href="https://berlin.social/@max"
+              title="mastodon"
             >
-          </li>
-          <li>
+              <svg
+                class="inline"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="#6364ff"
+                viewBox="0 0 256 256"
+                ><path
+                  d="M216,72v72a32,32,0,0,1-32,32H40V72A32,32,0,0,1,72,40H184A32,32,0,0,1,216,72Z"
+                  opacity="0.2"></path><path
+                  d="M184,32H72A40,40,0,0,0,32,72V192a40,40,0,0,0,40,40h88a8,8,0,0,0,0-16H72a24,24,0,0,1-24-24v-8H184a40,40,0,0,0,40-40V72A40,40,0,0,0,184,32Zm24,112a24,24,0,0,1-24,24H48V72A24,24,0,0,1,72,48H184a24,24,0,0,1,24,24Zm-24-40v32a8,8,0,0,1-16,0V104a16,16,0,0,0-32,0v32a8,8,0,0,1-16,0V104a16,16,0,0,0-32,0v32a8,8,0,0,1-16,0V104a32,32,0,0,1,56-21.13A32,32,0,0,1,184,104Z"
+                ></path></svg
+              >
+            </a>
+
             <a
-              class="underline hover:no-underline text-sky-700"
-              href="https://www.linkedin.com/in/maximilianhoffmann/">Linkedin</a
+              class="hover:underline text-sky-700"
+              href="https://www.linkedin.com/in/maximilianhoffmann/"
+              title="linkedin"
             >
-          </li>
-          <li>
-            <a
-              class="underline hover:no-underline text-gray-600"
-              href="https://max.hn">Webseite</a
-            >
-          </li>
-        </ul>
+              <svg
+                class="inline"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="#0a66c2"
+                viewBox="0 0 256 256"
+                ><path
+                  d="M224,40V216a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8H216A8,8,0,0,1,224,40Z"
+                  opacity="0.2"></path><path
+                  d="M216,24H40A16,16,0,0,0,24,40V216a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V40A16,16,0,0,0,216,24Zm0,192H40V40H216V216ZM96,112v64a8,8,0,0,1-16,0V112a8,8,0,0,1,16,0Zm88,28v36a8,8,0,0,1-16,0V140a20,20,0,0,0-40,0v36a8,8,0,0,1-16,0V112a8,8,0,0,1,15.79-1.78A36,36,0,0,1,184,140ZM100,84A12,12,0,1,1,88,72,12,12,0,0,1,100,84Z"
+                ></path></svg
+              >
+            </a>
+          </span>
+        </p>
       </div>
 
       {
