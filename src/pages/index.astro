@@ -159,6 +159,8 @@ const timestamp = rawLines.filter((line) => line.includes("Stand:"))[0];
             ];
             const indexDifference =
               months[currentMonth] - months[selectedMonth];
+            const percentageDifference =
+              (months[currentMonth] / months[selectedMonth]) * 100 - 100;
             const didIndexIncrease = indexDifference >= 0;
             const monthsAgo =
               monthList.indexOf(currentMonth) -
@@ -166,7 +168,7 @@ const timestamp = rawLines.filter((line) => line.includes("Stand:"))[0];
 
             resultElement.innerHTML = `${
               indexDifference === 0 ? "" : didIndexIncrease ? "+ " : ""
-            }${formatNumber(indexDifference)}&nbsp;%`;
+            }${formatNumber(percentageDifference)}&nbsp;%`;
 
             resultElement.classList.remove(
               "text-emerald-500",
@@ -185,27 +187,37 @@ const timestamp = rawLines.filter((line) => line.includes("Stand:"))[0];
                 resultElement.classList.add("text-red-500");
                 infoElement.classList.add(...warningClasses);
                 infoElement.innerHTML = `Es besteht die Möglichkeit, dass dein Vermieter deine Miete um <span class="whitespace-nowrap font-bold text-red-500">${formatNumber(
+                  percentageDifference,
+                )} %</span> erhöhen könnte, da die letzte Erhöhung über 12 Monate zurückliegt und der Index um <strong>${formatNumber(
                   indexDifference,
-                )} %</span> erhöhen könnte, da die letzte Erhöhung über 12 Monate zurückliegt.`;
+                )} Prozentpunkte</strong> (von ${formatNumber(
+                  months[selectedMonth],
+                )} auf ${formatNumber(months[currentMonth])}) gestiegen ist.`;
               } else {
                 resultElement.classList.add("text-orange-500");
                 infoElement.classList.add(...noticeClasses);
-                infoElement.innerHTML = `Deine letzte Erhöhung ist noch keine 12 Monate her, deshalb dürfte dein Vermieter die Miete nicht wegen der Indexklausel erhöhen. Der Index ist seitdem um <span class="whitespace-nowrap font-bold text-orange-600">${formatNumber(
+                infoElement.innerHTML = `Deine letzte Erhöhung ist noch keine 12 Monate her, deshalb dürfte dein Vermieter die Miete nicht wegen der Indexklausel erhöhen. Der Index ist seitdem um <strong>${formatNumber(
                   indexDifference,
-                )} %</span> gestiegen.`;
+                )} Prozentpunkte</strong> gestiegen (von ${formatNumber(
+                  months[selectedMonth],
+                )} auf ${formatNumber(
+                  months[currentMonth],
+                )}). Wäre die Erhöhung mehr als 12 Monate her, könnte er die Miete um <span class="whitespace-nowrap font-bold text-orange-600">${formatNumber(
+                  percentageDifference,
+                )}%</span> erhöhen.`;
               }
             } else if (monthsAgo >= 12) {
               resultElement.classList.add("text-emerald-500");
               infoElement.classList.add(...positiveClasses);
               infoElement.innerHTML = `Du könntest diesen Monat deine Miete um <span class="whitespace-nowrap font-bold text-emerald-700">${formatNumber(
-                indexDifference,
+                percentageDifference,
               )} %</span> senken.`;
             } else {
               resultElement.classList.add("text-emerald-500");
               infoElement.classList.add(...noticeClasses);
               infoElement.innerHTML = `Deine letzte Mietanpassung ist noch keine 12 Monate her, deshalb kannst du deine Miete wahrscheinlich noch nicht mit der Indexklausel reduzieren. Der Index ist seitdem um <span class="whitespace-nowrap font-bold text-emerald-500">${formatNumber(
                 indexDifference,
-              )} %</span> gesunken.`;
+              )} Prozentpunkte</span> gesunken.`;
             }
           }
 
